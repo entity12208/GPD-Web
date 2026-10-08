@@ -51,7 +51,7 @@ export class LocalSession implements Session {
   kind: SessionKind;
   game: Game;
   myName: string | null;
-  gameId = 'Local';
+  gameId = `Local-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
   busy = false;
   private acc = 0;
   onChange?: () => void;
@@ -77,7 +77,7 @@ export class LocalSession implements Session {
   }
   isMyTurn(): boolean {
     const cur = this.game.current();
-    return !!cur && this.kind === 'local' && cur.name === this.myName && !cur.is_bot && !cur.eliminated && !cur.is_spectator;
+    return !!cur && !this.game.winner && this.kind === 'local' && cur.name === this.myName && !cur.is_bot && !cur.eliminated && !cur.is_spectator;
   }
   isHost(): boolean {
     return this.kind === 'local';
@@ -291,7 +291,7 @@ export class OnlineSession implements Session {
   isMyTurn(): boolean {
     const s = this.snapshot();
     const cur = s.players[s.turn_idx];
-    return !!cur && cur.name === this.myName && !cur.eliminated && !cur.is_spectator && s.status === 'playing';
+    return !!cur && !s.winner && cur.name === this.myName && !cur.eliminated && !cur.is_spectator && s.status === 'playing';
   }
   isHost(): boolean {
     return this.snapshot().players[0]?.name === this.myName;

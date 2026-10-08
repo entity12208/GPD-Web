@@ -1,13 +1,12 @@
 plugins = []
 headers = []
-redirects = []
 
 [functions]
 
   [functions."*"]
 
 [build]
-publish = "/opt/build/repo"
+publish = "dist"
 publishOrigin = "default"
 
   [build.environment]
@@ -23,3 +22,8 @@ publishOrigin = "default"
     [build.processing.js]
 
   [build.services]
+
+[[redirects]]
+from = "/*"
+to = "/index.html"
+status = 200
